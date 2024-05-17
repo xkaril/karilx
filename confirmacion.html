@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmación - Reserva de Citas Médicas</title>
+    <link rel="stylesheet" href="Reserva_Cita.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            width: calc(100% - 12px);
+            padding: 6px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: -10px;
+        }
+
+        #confirmar {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #confirmar:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        #mensaje {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        footer a {
+            color: #007bff;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        #datos-seleccionados {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <a href="Horario.html" class="btn btn-secondary">Volver a Horario </a>
+
+    <header class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Confirmación de Reserva</a>
+    </header>
+
+    <div class="container mt-5">
+        <h2>Confirmación de Reserva</h2>
+        <form id="formulario">
+            <label for="telefono">Número Principal</label>
+            <input type="text" id="telefono" name="telefono" maxlength="9" pattern="9\d{8}" required>
+            <span class="error" id="error-telefono"></span>
+
+            <label for="correo">Correo Electrónico</label>
+            <input type="text" id="correo" name="correo" required>
+            <span class="error" id="error-correo"></span>
+
+            <div id="datos-seleccionados">
+                <h3>Datos Seleccionados:</h3>
+                <p>Especialidad: <span id="especialidad-confirmacion"></span></p>
+                <p>Consulta: <span id="consulta-confirmacion"></span></p>
+                <p>Lugar: <span id="lugar-confirmacion"></span></p>
+                <p>Día: <span id="dia-confirmacion"></span></p>
+                <p>Hora: <span id="hora-confirmacion"></span></p>
+            </div>
+
+            <button id="confirmar" onclick="confirmarReserva()" disabled>Confirmar</button>
+            <div id="mensaje"></div>
+        </form>
+    </div>
+
+    <footer>
+        <a href="especialidad.html">Volver a Elegir Día y Hora</a>
+    </footer>
+
+    <script>
+        function getParameterByName(name, url) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[\[\]]/g, "\\$&");
+            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, " "));
+        }
+
+        var especialidad = getParameterByName('especialidad');
+        var consulta = getParameterByName('consulta');
+        var lugar = getParameterByName('lugar');
+        var dia = getParameterByName('dia');
+        var hora = getParameterByName('hora');
+
+        document.getElementById("especialidad-confirmacion").innerText = especialidad;
+        document.getElementById("consulta-confirmacion").innerText = consulta;
+        document.getElementById("lugar-confirmacion").innerText = lugar;
+        document.getElementById("dia-confirmacion").innerText = dia;
+        document.getElementById("hora-confirmacion").innerText = hora;
+
+        function validarTelefono() {
+            var telefonoInput = document.getElementById("telefono");
+            var telefono = telefonoInput.value;
+
+            if (!telefono.match(/^9\d{8}$/)) {
+                document.getElementById("error-telefono").innerText = "Por favor ingrese un número válido (el primer dígito debe ser 9 y luego 8 dígitos).";
+                telefonoInput.focus();
+                return false;
+            } else {
+                document.getElementById("error-telefono").innerText = "";
+                return true;
+            }
+        }
+
+        function validarCorreo() {
+            var correoInput = document.getElementById("correo");
+            var correo = correoInput.value;
+
+            if (!correo.match(/\S+@\S+\.\S+/)) {
+                document.getElementById("error-correo").innerText = "Por favor ingrese un correo electrónico válido.";
+                correoInput.focus();
+                return false;
+            } else {
+                document.getElementById("error-correo").innerText = "";
+                return true;
+            }
+        }
+
+        function validarCampos() {
+            var telefonoValido = validarTelefono();
+            var correoValido = validarCorreo();
+            return telefonoValido && correoValido;
+        }
+
+        function confirmarReserva() {
+            var telefonoValido = validarTelefono();
+            var correoValido = validarCorreo();
+
+            if (telefonoValido && correoValido) {
+                document.getElementById("formulario").reset();
+                document.getElementById("mensaje").innerText = "¡HORA DE CONSULTA MÉDICA RESERVADA DE FORMA EXITOSA!";
+                document.getElementById("confirmar").disabled = true;
+            }
+        }
+
+        var telefonoInput = document.getElementById("telefono");
+        telefonoInput.addEventListener("input", validarTelefono);
+
+        var correoInput = document.getElementById("correo");
+        correoInput.addEventListener("input", validarCorreo);
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

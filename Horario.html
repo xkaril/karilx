@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seleccionar Horario - Reserva de Citas Médicas</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .horario {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .box {
+            width: 45%; 
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .box h3 {
+            margin-bottom: 10px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .box ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .box ul li {
+            font-size: 16px;
+            margin-bottom: 5px;
+            cursor: pointer; 
+        }
+
+        .box ul li:hover {
+            background-color: #f0f0f0; 
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        footer a {
+            color: #007bff;
+            text-decoration: none;
+            font-size: 18px;
+            margin-right: 20px;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        .boton-continuar {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .boton-continuar:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="confirmacion.html">Seleccionar Horario</a>
+    </header>
+
+    <div class="container mt-5">
+        <h2>Seleccionar Horario</h2>
+        <form>
+            <div class="form-group">
+                <label for="inputFecha">Fecha:</label>
+                <input type="date" class="form-control" id="inputFecha" required>
+            </div>
+            <div class="form-group">
+                <label for="inputHora">Hora:</label>
+                <input type="time" class="form-control" id="inputHora" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Buscar Horarios Disponibles</button>
+        </form>
+    </div>
+
+    <footer class="text-center mt-5">
+        <a href="especialidad.html" class="btn btn-secondary">Volver a Especialidades</a>
+    </footer>
+
+    <script>
+        function generarFechasAbril() {
+            var fechas = document.getElementById("fechas");
+            var diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+
+            for (var dia = 1; dia <= 30; dia++) {
+                var fecha = new Date(2024, 3, dia); 
+                var diaSemanaIndex = fecha.getDay();
+                var diaSemana = diasSemana[diaSemanaIndex];
+                
+                if (diaSemanaIndex !== 0 && diaSemanaIndex !== 6) {
+                    var listItem = document.createElement("li");
+                    listItem.textContent = diaSemana + ", " + dia + " de Abril";
+                    listItem.addEventListener('click', function() {
+                        var horarios = document.getElementById("horarios");
+                        horarios.innerHTML = "";
+
+                        var horariosDisponibles = [
+                          { fecha: "12 de Abril", horarios: ["11:00 AM - 12:00 PM", "04:00 PM - 05:00 PM"] },
+                            "10:00 AM - 11:00 AM",
+                            "11:00 AM - 12:00 PM",
+                            "01:00 PM - 02:00 PM",
+                            "02:00 PM - 03:00 PM",
+                            "03:00 PM - 04:00 PM",
+                            "04:00 PM - 05:00 PM"
+                        ];
+
+                        var horariosNoDisponibles = [
+                            { fecha: "16 de Abril", horarios: ["09:00 AM - 10:00 AM", "01:00 PM - 02:00 PM", "04:00 PM - 05:00 PM"] },
+                            { fecha: "18 de Abril", horarios: ["11:00 AM - 12:00 PM", "04:00 PM - 05:00 PM"] },
+                            { fecha: "24 de Abril", horarios: ["11:00 AM - 12:00 PM"] },
+                            { fecha: "29 de Abril", horarios: ["09:00 AM - 10:00 AM", "01:00 PM - 02:00 PM"] }
+                        ];
+
+                        for (var i = 0; i < horariosDisponibles.length; i++) {
+                            var listItem = document.createElement("li");
+                            listItem.textContent = horariosDisponibles[i];
+
+                            var horarioDisponible = true;
+                            for (var j = 0; j < horariosNoDisponibles.length; j++) {
+                                if (horariosNoDisponibles[j].fecha === this.textContent && horariosNoDisponibles[j].horarios.includes(listItem.textContent)) {
+                                    horarioDisponible = false;
+                                    break;
+                                }
+                            }
+
+                            if (!horarioDisponible) {
+                                listItem.style.textDecoration = "line-through"; 
+                            } else {
+                                listItem.addEventListener('click', function() {
+                                    var horarios = document.querySelectorAll("#horarios li");
+                                    horarios.forEach(function(item) {
+                                        item.classList.remove("seleccionado");
+                                    });
+                                    this.classList.add("seleccionado");
+
+                                    
+                                    document.getElementById("btnContinuar").disabled = false;
+                                });
+                            }
+
+                            horarios.appendChild(listItem);
+                        }
+                    });
+
+                    fechas.appendChild(listItem);
+                }
+            }
+        }
+
+        function continuar() {
+            console.log("Continuar con la reserva...");
+            window.location.href = "confirmacion.html"; 
+        }
+
+        window.onload = generarFechasAbril;
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
