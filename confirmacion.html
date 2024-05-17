@@ -90,16 +90,16 @@
         <form id="formulario">
             <label for="telefono">Número Principal</label>
             <input type="text" id="telefono" name="telefono" maxlength="12" pattern="\+\d{11}" placeholder="+569XXXXXXXX" required>
-            <span class="error" id="error-telefono"></span>
+            <span class="error" id="errorTelefono"></span>
 
             <label for="correo">Correo Electrónico</label>
             <input type="text" id="correo" name="correo" required>
-            <span class="error" id="error-correo"></span>
+            <span class="error" id="errorCorreo"></span>
 
-            <p>Fecha: <span id="fecha-confirmacion"></span></p>
-            <p>Horario: <span id="horario-confirmacion"></span></p>
-            <p>Consulta: <span id="consulta-confirmacion"></span></p>
-            <p>Lugar: <span id="lugar-confirmacion"></span></p>
+            <p>Fecha: <span id="fechaConfirmacion"></span></p>
+            <p>Horario: <span id="horarioConfirmacion"></span></p>
+            <p>Consulta: <span id="consultaConfirmacion"></span></p>
+            <p>Lugar: <span id="lugarConfirmacion"></span></p>
 
             <button id="confirmar" onclick="confirmarReserva()" disabled>Confirmar</button>
             <div id="mensaje"></div>
@@ -118,10 +118,15 @@
             var lugar = localStorage.getItem('regionSeleccionada');
             var correo = localStorage.getItem('currentUserEmail');
 
-            document.getElementById('fecha-confirmacion').textContent = fecha || 'No se ha seleccionado una fecha';
-            document.getElementById('horario-confirmacion').textContent = horario || 'No se ha seleccionado un horario';
-            document.getElementById('consulta-confirmacion').textContent = consulta || 'No se ha seleccionado una consulta';
-            document.getElementById('lugar-confirmacion').textContent = lugar || 'No se ha seleccionado un lugar';
+            if (fecha) {
+                var fechaParts = fecha.split('-');
+                fecha = `${fechaParts[2]}/${fechaParts[1]}/${fechaParts[0]}`;
+            }
+
+            document.getElementById('fechaConfirmacion').textContent = fecha || 'No se ha seleccionado una fecha';
+            document.getElementById('horarioConfirmacion').textContent = horario || 'No se ha seleccionado un horario';
+            document.getElementById('consultaConfirmacion').textContent = consulta || 'No se ha seleccionado una consulta';
+            document.getElementById('lugarConfirmacion').textContent = lugar || 'No se ha seleccionado un lugar';
             document.getElementById('correo').value = correo || '';
         });
 
@@ -130,11 +135,11 @@
             var telefono = telefonoInput.value;
 
             if (!telefono.match(/^\+\d{11}$/)) {
-                document.getElementById("error-telefono").innerText = "Por favor ingrese un número válido (+569XXXXXXXX).";
+                document.getElementById("errorTelefono").innerText = "Por favor ingrese un número válido (+569XXXXXXXX).";
                 telefonoInput.focus();
                 return false;
             } else {
-                document.getElementById("error-telefono").innerText = "";
+                document.getElementById("errorTelefono").innerText = "";
                 return true;
             }
         }
@@ -144,11 +149,11 @@
             var correo = correoInput.value;
 
             if (!correo.match(/\S+@\S+\.\S+/)) {
-                document.getElementById("error-correo").innerText = "Por favor ingrese un correo electrónico válido.";
+                document.getElementById("errorCorreo").innerText = "Por favor ingrese un correo electrónico válido.";
                 correoInput.focus();
                 return false;
             } else {
-                document.getElementById("error-correo").innerText = "";
+                document.getElementById("errorCorreo").innerText = "";
                 return true;
             }
         }
@@ -165,7 +170,7 @@
 
             if (telefonoValido && correoValido) {
                 document.getElementById("formulario").reset();
-                document.getElementById("mensaje").innerText = "¡HORA DE CONSULTA MÉDICA RESERVADA DE FORMA EXITOSA!";
+                document.getElementById("mensaje").innerText = "¡Hora de consulta médica reservada de forma exitosa!";
                 document.getElementById("confirmar").disabled = true;
             }
         }
@@ -187,3 +192,4 @@
     </script>
 </body>
 </html>
+
