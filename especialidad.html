@@ -13,7 +13,7 @@
         </div>
         <h2>Seleccionar Especialidad</h2>
     </header>
-    <a href="servicios.html" class="back-link">&#8592; Volver</a>
+    <a href="index.html" class="back-link">&#8592; Volver</a>
 
     <main>
         <section class="seleccion">
@@ -26,8 +26,8 @@
                     <option value="alergia_e_inmunologia_infantil">Alergía e Inmunología Infantil</option>
                     <option value="andrologia">Andrología</option>
                     <option value="anestesiologia">Anestesiología</option>
-                    <option value="broncopulmunar_adulto">Broncopulmunar Adulto</option>
-                    <option value="broncopulmunar_infantil">Broncopulmunar Infantil</option>
+                    <option value="broncopulmonar_adulto">Broncopulmonar Adulto</option>
+                    <option value="broncopulmonar_infantil">Broncopulmonar Infantil</option>
                     <option value="cardiogenetica">Cardiogenética</option>
                     <option value="cardiologia_adulto">Cardiología Adulto</option>
                     <option value="cardiologia_infantil">Cardiología Infantil</option>
@@ -76,7 +76,6 @@
         <button onclick="validarYGuardar()">Buscar Horas</button>
     </main>
 
-   
     <script>
         function validarYGuardar() {
             var consultas = document.getElementById('consultas').value;
@@ -102,7 +101,11 @@
             if (valido) {
                 localStorage.setItem('consultaSeleccionada', consultas);
                 localStorage.setItem('regionSeleccionada', region);
+                console.log("Consulta seleccionada:", consultas);
+                console.log("Región seleccionada:", region);
                 window.location.href = "horario.html"; 
+            } else {
+                alert("Por favor complete todos los campos.");
             }
         }
     </script>

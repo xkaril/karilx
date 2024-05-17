@@ -31,6 +31,15 @@
                 event.target.value = valor;
             });
         });
+
+        function validarRut() {
+            const rut = document.getElementById('rut').value;
+            if (rut === '') {
+                alert("Por favor ingrese un RUT válido.");
+                return false;
+            }
+            return true;
+        }
     </script>
 </head>
 <body>
@@ -38,7 +47,6 @@
         <a class="navbar-brand" href="#">Identificación del Paciente</a>
     </header>
     <a href="index.html" class="back-link">&#8592; Volver al inicio</a>
-
 
     <div class="container mt-5">
         <h2>Identificación del Paciente</h2>
