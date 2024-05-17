@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Seleccionar Especialidad - Reserva de Citas Médicas</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="Reserva_Cita.css">
 </head>
 <body>
     <header class="encabezado">
@@ -13,6 +13,7 @@
         </div>
         <h2>Seleccionar Especialidad</h2>
     </header>
+    <a href="servicios.html" class="back-link">&#8592; Volver</a>
 
     <main>
         <section class="seleccion">
@@ -50,7 +51,6 @@
                     <option value="traumatologia_muñeca">Traumatología Muñeca</option>
                     <option value="traumatologia_pie">Traumatología Pie</option>
                     <option value="traumatologia_tobillo">Traumatología Tobillo</option>
-
                 </select>
                 <p id="error-consultas" class="error"></p>
             </div>
@@ -68,27 +68,22 @@
                     <option value="redsalud_los_angeles">RedSalud Los Ángeles</option>
                     <option value="redsalud_punta_arenas">RedSalud Punta Arenas</option>
                     <option value="redsalud_valparaiso">RedSalud Valparaíso</option>
-
                 </select>
                 <p id="error-region" class="error"></p>
             </div>
         </section>
 
-        <button onclick="validarYBuscar()">Buscar Horas</button>
+        <button onclick="validarYGuardar()">Buscar Horas</button>
     </main>
 
-    <footer>
-        <a href="servicios.html">Volver</a>
-    </footer>
-
+   
     <script>
-        function validarYBuscar() {
+        function validarYGuardar() {
             var consultas = document.getElementById('consultas').value;
             var region = document.getElementById('region').value;
             var errorConsultas = document.getElementById('error-consultas');
             var errorRegion = document.getElementById('error-region');
             var valido = true;
-
 
             if (consultas === '') {
                 errorConsultas.innerText = 'Por favor seleccione un tipo de consulta.';
@@ -105,6 +100,8 @@
             }
 
             if (valido) {
+                localStorage.setItem('consultaSeleccionada', consultas);
+                localStorage.setItem('regionSeleccionada', region);
                 window.location.href = "horario.html"; 
             }
         }

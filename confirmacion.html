@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Confirmación - Reserva de Citas Médicas</title>
     <link rel="stylesheet" href="Reserva_Cita.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         form {
             max-width: 600px;
@@ -76,77 +75,62 @@
         footer a:hover {
             text-decoration: underline;
         }
-
-        #datos-seleccionados {
-            margin-top: 20px;
-        }
     </style>
 </head>
 <body>
-    <a href="Horario.html" class="btn btn-secondary">Volver a Horario </a>
 
-    <header class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">Confirmación de Reserva</a>
+    <header class="encabezado">
+        <div class="topnav">
+            <span class="titulo">Confirmación de Reserva</span>
+        </div>
     </header>
+    <a href="Horario.html" class="back-link">&#8592; Volver a seleccionar el horario</a>
 
-    <div class="container mt-5">
-        <h2>Confirmación de Reserva</h2>
+    <main>
         <form id="formulario">
             <label for="telefono">Número Principal</label>
-            <input type="text" id="telefono" name="telefono" maxlength="9" pattern="9\d{8}" required>
+            <input type="text" id="telefono" name="telefono" maxlength="12" pattern="\+\d{11}" placeholder="+569XXXXXXXX" required>
             <span class="error" id="error-telefono"></span>
 
             <label for="correo">Correo Electrónico</label>
             <input type="text" id="correo" name="correo" required>
             <span class="error" id="error-correo"></span>
 
-            <div id="datos-seleccionados">
-                <h3>Datos Seleccionados:</h3>
-                <p>Especialidad: <span id="especialidad-confirmacion"></span></p>
-                <p>Consulta: <span id="consulta-confirmacion"></span></p>
-                <p>Lugar: <span id="lugar-confirmacion"></span></p>
-                <p>Día: <span id="dia-confirmacion"></span></p>
-                <p>Hora: <span id="hora-confirmacion"></span></p>
-            </div>
+            <p>Fecha: <span id="fecha-confirmacion"></span></p>
+            <p>Horario: <span id="horario-confirmacion"></span></p>
+            <p>Consulta: <span id="consulta-confirmacion"></span></p>
+            <p>Lugar: <span id="lugar-confirmacion"></span></p>
 
             <button id="confirmar" onclick="confirmarReserva()" disabled>Confirmar</button>
             <div id="mensaje"></div>
         </form>
-    </div>
+    </main>
 
     <footer>
-        <a href="especialidad.html">Volver a Elegir Día y Hora</a>
+        <a href="Horario.html">Volver a Elegir Día y Hora</a>
     </footer>
 
     <script>
-        function getParameterByName(name, url) {
-            if (!url) url = window.location.href;
-            name = name.replace(/[\[\]]/g, "\\$&");
-            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-                results = regex.exec(url);
-            if (!results) return null;
-            if (!results[2]) return '';
-            return decodeURIComponent(results[2].replace(/\+/g, " "));
-        }
+        document.addEventListener('DOMContentLoaded', function() {
+            var fecha = localStorage.getItem('fechaSeleccionada');
+            var horario = localStorage.getItem('horarioSeleccionado');
+            var consulta = localStorage.getItem('consultaSeleccionada');
+            var lugar = localStorage.getItem('regionSeleccionada');
+            var correo = localStorage.getItem('currentUserEmail');
 
-        var especialidad = getParameterByName('especialidad');
-        var consulta = getParameterByName('consulta');
-        var lugar = getParameterByName('lugar');
-        var dia = getParameterByName('dia');
-        var hora = getParameterByName('hora');
-
-        document.getElementById("especialidad-confirmacion").innerText = especialidad;
-        document.getElementById("consulta-confirmacion").innerText = consulta;
-        document.getElementById("lugar-confirmacion").innerText = lugar;
-        document.getElementById("dia-confirmacion").innerText = dia;
-        document.getElementById("hora-confirmacion").innerText = hora;
+            document.getElementById('fecha-confirmacion').textContent = fecha || 'No se ha seleccionado una fecha';
+            document.getElementById('horario-confirmacion').textContent = horario || 'No se ha seleccionado un horario';
+            document.getElementById('consulta-confirmacion').textContent = consulta || 'No se ha seleccionado una consulta';
+            document.getElementById('lugar-confirmacion').textContent = lugar || 'No se ha seleccionado un lugar';
+            document.getElementById('correo').value = correo || '';
+        });
 
         function validarTelefono() {
             var telefonoInput = document.getElementById("telefono");
             var telefono = telefonoInput.value;
 
-            if (!telefono.match(/^9\d{8}$/)) {
-                document.getElementById("error-telefono").innerText = "Por favor ingrese un número válido (el primer dígito debe ser 9 y luego 8 dígitos).";
+            if (!telefono.match(/^\+\d{11}$/)) {
+                document.getElementById("error-telefono").innerText = "Por favor ingrese un número válido (+569XXXXXXXX).";
                 telefonoInput.focus();
                 return false;
             } else {
@@ -191,10 +175,15 @@
 
         var correoInput = document.getElementById("correo");
         correoInput.addEventListener("input", validarCorreo);
-    </script>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        correoInput.addEventListener("input", function() {
+            var confirmarBtn = document.getElementById("confirmar");
+            if (validarCorreo()) {
+                confirmarBtn.disabled = false;
+            } else {
+                confirmarBtn.disabled = true;
+            }
+        });
+    </script>
 </body>
 </html>
